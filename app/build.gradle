@@ -24,6 +24,10 @@ android {
     dataBinding {
         enabled = true
     }
+
+    buildTypes.each {
+        it.buildConfigField 'String', 'TMDB_API_KEY', TMDB_API_KEY
+    }
 }
 
 dependencies {
