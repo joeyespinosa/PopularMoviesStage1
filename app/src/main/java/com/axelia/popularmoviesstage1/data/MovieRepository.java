@@ -17,34 +17,25 @@ import com.axelia.popularmoviesstage1.utils.AppExecutors;
 import java.util.List;
 
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import timber.log.Timber;
 
+@Singleton
 public class MovieRepository implements DataSource {
 
-    private static volatile MovieRepository sInstance;
     private final MoviesLocalDataSource mLocalDataSource;
     private final MoviesRemoteDataSource mRemoteDataSource;
     private final AppExecutors mExecutors;
 
-    private MovieRepository(MoviesLocalDataSource localDataSource,
+    @Inject
+    public MovieRepository(MoviesLocalDataSource localDataSource,
                             MoviesRemoteDataSource remoteDataSource,
                             AppExecutors executors) {
         mLocalDataSource = localDataSource;
         mRemoteDataSource = remoteDataSource;
         mExecutors = executors;
-    }
-
-    public static MovieRepository getInstance(MoviesLocalDataSource localDataSource,
-                                              MoviesRemoteDataSource remoteDataSource,
-                                              AppExecutors executors) {
-        if (sInstance == null) {
-            synchronized (MovieRepository.class) {
-                if (sInstance == null) {
-                    sInstance = new MovieRepository(localDataSource, remoteDataSource, executors);
-                }
-            }
-        }
-        return sInstance;
     }
 
     @Override

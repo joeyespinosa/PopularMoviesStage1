@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.axelia.popularmoviesstage1.MovieApplication;
 import com.axelia.popularmoviesstage1.R;
 import com.axelia.popularmoviesstage1.data.model.MovieDetails;
 import com.axelia.popularmoviesstage1.data.model.Resource;
@@ -28,10 +29,14 @@ import com.axelia.popularmoviesstage1.ui.details.cast.CastAdapter;
 import com.axelia.popularmoviesstage1.ui.details.reviews.ReviewsAdapter;
 import com.axelia.popularmoviesstage1.ui.details.trailers.TrailersAdapter;
 import com.axelia.popularmoviesstage1.utils.Constants;
-import com.axelia.popularmoviesstage1.utils.InjectionHandler;
+import com.axelia.popularmoviesstage1.utils.MovieDetailsViewModelFactory;
 import com.axelia.popularmoviesstage1.utils.ViewModelFactory;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Objects;
+
+import javax.inject.Inject;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -40,10 +45,15 @@ public class DetailsActivity extends AppCompatActivity {
     private ActivityDetailsBinding mBinding;
     private MovieDetailsViewModel mViewModel;
 
+    @Inject
+    MovieDetailsViewModelFactory factory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppThemeLight);
         super.onCreate(savedInstanceState);
+
+        MovieApplication.getComponent(Objects.requireNonNull(this)).inject(this);
 
         final long movieId = getIntent().getLongExtra(EXTRA_MOVIE_ID, DEFAULT_ID);
         if (movieId == DEFAULT_ID) {
@@ -54,7 +64,7 @@ public class DetailsActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_details);
         mBinding.setLifecycleOwner(this);
 
-        mViewModel = obtainViewModel();
+        mViewModel = ViewModelProviders.of(this, factory).get(MovieDetailsViewModel.class);
         mViewModel.init(movieId);
         setupToolbar();
         setupTrailersAdapter();
@@ -137,11 +147,6 @@ public class DetailsActivity extends AppCompatActivity {
                 new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerviewReviews.setAdapter(new ReviewsAdapter());
         ViewCompat.setNestedScrollingEnabled(recyclerviewReviews, false);
-    }
-
-    private MovieDetailsViewModel obtainViewModel() {
-        ViewModelFactory factory = InjectionHandler.provideViewModelFactory(this);
-        return ViewModelProviders.of(this, factory).get(MovieDetailsViewModel.class);
     }
 
     @Override

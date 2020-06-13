@@ -17,30 +17,25 @@ import com.axelia.popularmoviesstage1.data.remote.paging.MovieDataSourceFactory;
 import com.axelia.popularmoviesstage1.data.remote.paging.MoviePageKeyedDataSource;
 import com.axelia.popularmoviesstage1.utils.*;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+
+@Singleton
 public class MoviesRemoteDataSource {
 
     private static final int PAGE_SIZE = 30;
-    private final AppExecutors mExecutors;
-    private static volatile MoviesRemoteDataSource sInstance;
-    private final MovieService mMovieService;
 
-    private MoviesRemoteDataSource(MovieService movieService,
-                                   AppExecutors executors) {
+    @Inject
+    AppExecutors mExecutors;
+
+    @Inject
+    MovieService mMovieService;
+
+    public MoviesRemoteDataSource(MovieService movieService,
+                                  AppExecutors executors) {
         mMovieService = movieService;
         mExecutors = executors;
-    }
-
-    public static MoviesRemoteDataSource getInstance(MovieService movieService,
-                                                     AppExecutors executors) {
-        if (sInstance == null) {
-            synchronized (AppExecutors.class) {
-                if (sInstance == null) {
-                    sInstance = new MoviesRemoteDataSource(movieService, executors);
-                }
-            }
-        }
-        return sInstance;
     }
 
     public LiveData<ApiResponse<Movie>> loadMovieDetails(final long movieId) {

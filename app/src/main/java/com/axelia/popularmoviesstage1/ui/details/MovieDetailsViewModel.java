@@ -12,20 +12,19 @@ import com.axelia.popularmoviesstage1.data.model.MovieDetails;
 import com.axelia.popularmoviesstage1.data.model.Resource;
 import com.axelia.popularmoviesstage1.utils.SnackbarPrompt;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class MovieDetailsViewModel extends ViewModel {
 
     private final MovieRepository repository;
-
     private LiveData<Resource<MovieDetails>> result;
-
     private MutableLiveData<Long> movieIdLiveData = new MutableLiveData<>();
-
     private final SnackbarPrompt mSnackbarText = new SnackbarPrompt();
-
     private boolean isFavorite;
 
+    @Inject
     public MovieDetailsViewModel(final MovieRepository repository) {
         this.repository = repository;
     }

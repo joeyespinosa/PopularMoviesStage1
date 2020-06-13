@@ -18,20 +18,36 @@ import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.axelia.popularmoviesstage1.MovieApplication;
 import com.axelia.popularmoviesstage1.R;
 import com.axelia.popularmoviesstage1.data.model.Movie;
 import com.axelia.popularmoviesstage1.data.model.MoviesFilterType;
 import com.axelia.popularmoviesstage1.data.model.Resource;
-import com.axelia.popularmoviesstage1.utils.InjectionHandler;
+import com.axelia.popularmoviesstage1.ui.details.MovieDetailsViewModel;
+import com.axelia.popularmoviesstage1.utils.BrowseMoviesViewModelFactory;
 import com.axelia.popularmoviesstage1.utils.ItemOffsetDecoration;
+import com.axelia.popularmoviesstage1.utils.MovieDetailsViewModelFactory;
 import com.axelia.popularmoviesstage1.utils.ViewModelFactory;
+
+import java.util.Objects;
+
+import javax.inject.Inject;
 
 public class BrowseMoviesFragment extends Fragment {
 
     private BrowseMoviesViewModel viewModel;
 
+    @Inject
+    BrowseMoviesViewModelFactory factory;
+
     public static BrowseMoviesFragment newInstance() {
         return new BrowseMoviesFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MovieApplication.getComponent(Objects.requireNonNull(getActivity())).inject(this);
     }
 
     @Nullable
@@ -45,7 +61,7 @@ public class BrowseMoviesFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel = obtainViewModel(getActivity());
+        viewModel = ViewModelProviders.of(this, factory).get(BrowseMoviesViewModel.class);
         setupListAdapter();
 
         viewModel.getCurrentTitle().observe(this, new Observer<Integer>() {
@@ -82,11 +98,6 @@ public class BrowseMoviesFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
     //endregion
-
-    public static BrowseMoviesViewModel obtainViewModel(FragmentActivity activity) {
-        ViewModelFactory factory = InjectionHandler.provideViewModelFactory(activity);
-        return ViewModelProviders.of(activity, factory).get(BrowseMoviesViewModel.class);
-    }
 
     private void setupListAdapter() {
         RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerview_movie_list);

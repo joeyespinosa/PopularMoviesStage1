@@ -15,23 +15,38 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.axelia.popularmoviesstage1.MovieApplication;
 import com.axelia.popularmoviesstage1.R;
 import com.axelia.popularmoviesstage1.data.model.Movie;
 import com.axelia.popularmoviesstage1.databinding.FragmentFavoriteMoviesBinding;
+import com.axelia.popularmoviesstage1.ui.details.MovieDetailsViewModel;
 import com.axelia.popularmoviesstage1.ui.movielist.browse.MainActivity;
-import com.axelia.popularmoviesstage1.utils.InjectionHandler;
+import com.axelia.popularmoviesstage1.utils.FavoritesViewModelFactory;
 import com.axelia.popularmoviesstage1.utils.ItemOffsetDecoration;
+import com.axelia.popularmoviesstage1.utils.MovieDetailsViewModelFactory;
 import com.axelia.popularmoviesstage1.utils.ViewModelFactory;
 
 import java.util.List;
+import java.util.Objects;
+
+import javax.inject.Inject;
 
 public class FavoritesFragment extends Fragment {
 
     private FavoritesViewModel viewModel;
     private FragmentFavoriteMoviesBinding binding;
 
+    @Inject
+    FavoritesViewModelFactory factory;
+
     public static FavoritesFragment newInstance() {
         return new FavoritesFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MovieApplication.getComponent(Objects.requireNonNull(getActivity())).inject(this);
     }
 
     @Nullable
@@ -46,7 +61,7 @@ public class FavoritesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         ((MainActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.favorites));
-        viewModel = obtainViewModel(getActivity());
+        viewModel = ViewModelProviders.of(this, factory).get(FavoritesViewModel.class);
         setupListAdapter();
     }
 
@@ -73,10 +88,5 @@ public class FavoritesFragment extends Fragment {
                 }
             }
         });
-    }
-
-    private FavoritesViewModel obtainViewModel(FragmentActivity activity) {
-        ViewModelFactory factory = InjectionHandler.provideViewModelFactory(activity);
-        return ViewModelProviders.of(activity, factory).get(FavoritesViewModel.class);
     }
 }

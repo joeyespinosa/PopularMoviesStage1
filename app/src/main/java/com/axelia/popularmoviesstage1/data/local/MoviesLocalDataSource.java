@@ -12,28 +12,20 @@ import com.axelia.popularmoviesstage1.utils.AppExecutors;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import timber.log.Timber;
 
 
+@Singleton
 public class MoviesLocalDataSource {
-
-    private static volatile MoviesLocalDataSource sInstance;
 
     private final MoviesDatabase mDatabase;
 
-    private MoviesLocalDataSource(MoviesDatabase database) {
+    @Inject
+    public MoviesLocalDataSource(MoviesDatabase database) {
         mDatabase = database;
-    }
-
-    public static MoviesLocalDataSource getInstance(MoviesDatabase database) {
-        if (sInstance == null) {
-            synchronized (AppExecutors.class) {
-                if (sInstance == null) {
-                    sInstance = new MoviesLocalDataSource(database);
-                }
-            }
-        }
-        return sInstance;
     }
 
     public void saveMovie(Movie movie) {

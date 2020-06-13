@@ -15,15 +15,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class MoviePageKeyedDataSource extends PageKeyedDataSource<Integer, Movie> {
 
     private static final int FIRST_PAGE = 1;
     public MutableLiveData<Resource> networkState = new MutableLiveData<>();
-    private final MovieService movieService;
+
+    @Inject
+    MovieService movieService;
+
     private final Executor networkExecutor;
     private final MoviesFilterType filterType;
     public RetryCallback retryCallback = null;

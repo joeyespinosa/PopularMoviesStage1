@@ -26,10 +26,6 @@ public abstract class MoviesDatabase extends RoomDatabase {
 
     public static final String DATABASE_NAME = "movies.db";
 
-    private static MoviesDatabase INSTANCE;
-
-    private static final Object sLock = new Object();
-
     public abstract MoviesDao moviesDao();
 
     public abstract TrailersDao trailersDao();
@@ -37,15 +33,6 @@ public abstract class MoviesDatabase extends RoomDatabase {
     public abstract CastsDao castsDao();
 
     public abstract ReviewsDao reviewsDao();
-
-    public static MoviesDatabase getInstance(Context context) {
-        synchronized (sLock) {
-            if (INSTANCE == null) {
-                INSTANCE = buildDatabase(context);
-            }
-            return INSTANCE;
-        }
-    }
 
     private static MoviesDatabase buildDatabase(final Context context) {
         return Room.databaseBuilder(

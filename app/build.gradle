@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
@@ -31,6 +32,9 @@ android {
         it.buildConfigField 'String', 'TMDB_API_KEY', TMDB_API_KEY
     }
 
+    kapt {
+        generateStubs = true
+    }
 }
 
 dependencies {
@@ -74,4 +78,17 @@ dependencies {
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    api 'com.google.dagger:dagger:2.24'
+    api 'com.google.dagger:dagger-android:2.24'
+    api 'com.google.dagger:dagger-android-support:2.24'
+
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.24'
+    kapt 'com.google.dagger:dagger-compiler:2.24'
+
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.24'
+    kapt 'com.google.dagger:dagger-android-processor:2.24'
+
+    compileOnly 'javax.annotation:jsr250-api:1.0'
+    implementation 'javax.inject:javax.inject:1'
 }

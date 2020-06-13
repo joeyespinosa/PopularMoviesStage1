@@ -8,32 +8,23 @@ import androidx.annotation.NonNull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 
 public class AppExecutors {
 
     private static volatile AppExecutors sInstance;
     private static final int THREAD_COUNT = 5;
-    private final Executor diskIO;
-    private final Executor mainThread;
-    private final Executor networkIO;
+
+    Executor diskIO;
+    Executor mainThread;
+    Executor networkIO;
 
     public AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
         this.diskIO = diskIO;
         this.networkIO = networkIO;
         this.mainThread = mainThread;
-    }
-
-    public static AppExecutors getInstance() {
-        if (sInstance == null) {
-            synchronized (AppExecutors.class) {
-                if (sInstance == null) {
-                    sInstance = new AppExecutors(Executors.newSingleThreadExecutor(),
-                            Executors.newFixedThreadPool(THREAD_COUNT),
-                            new MainThreadExecutor());
-                }
-            }
-        }
-        return sInstance;
     }
 
     public Executor diskIO() {
